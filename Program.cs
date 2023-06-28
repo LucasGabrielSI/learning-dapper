@@ -1,4 +1,5 @@
-﻿using BaltaDataAccess.Models;
+﻿using System.Data;
+using BaltaDataAccess.Models;
 using Dapper;
 using Microsoft.Data.SqlClient;
 
@@ -6,27 +7,12 @@ const string connectionString = "Server=localhost,1433;Database=balta;User ID=sa
 
 using(var connection = new SqlConnection(connectionString))
 {
-    // ADO.NET
-    // connection.Open();
-
-    // using (var command = new SqlCommand())
-    // {
-    //     command.Connection = connection;
-    //     command.CommandType = System.Data.CommandType.Text;
-    //     command.CommandText = "SELECT [Id], [Title] FROM [Category]";
-
-    //     var reader = command.ExecuteReader();
-    //     while (reader.Read())
-    //     {
-    //         Console.WriteLine($"{reader.GetGuid(0)} - {reader.GetString(1)}");
-    //     }
-    // };
-
     CreateCategory(connection);
     UpdateCategory(connection);
     DeleteCategory(connection);
     CreateManyCategories(connection);
     ListCategories(connection);
+    ExecuteProcedure(connection);
 }
 
 static void ListCategories(SqlConnection connection)
@@ -92,7 +78,7 @@ static void DeleteCategory(SqlConnection connection)
         id="10ac5463-9d0e-4c5c-a444-ddf340ca7ab4"
     });
 
-    Console.WriteLine($"{rows} registro(s) afetados");
+    Console.WriteLine($"{rows} registro(s) afetado(s)");
 }
 
 static void CreateManyCategories(SqlConnection connection)
@@ -150,5 +136,20 @@ static void CreateManyCategories(SqlConnection connection)
         }
     });
 
-    Console.WriteLine($"{rows} linha(s) inseridas");
+    Console.WriteLine($"{rows} linha(s) inserida(s)");
+}
+
+static void ExecuteProcedure(SqlConnection connection)
+{
+    var Procedure = "[spDeleteStudent]"; 
+
+    var pars = new { StudentId = "aee0caa7-53f3-4566-93a5-66c7be5032d7" };
+    
+    var affectedRows = connection.Execute(
+        Procedure, 
+        pars, 
+        commandType: CommandType.StoredProcedure
+    );
+
+    Console.WriteLine($"{affectedRows} registro(s) afetado(s)");
 }
