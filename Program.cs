@@ -6,7 +6,6 @@ const string connectionString = "Server=localhost,1433;Database=balta;User ID=sa
 
 using(var connection = new SqlConnection(connectionString))
 {
-    Console.WriteLine("Conectado!");
     // ADO.NET
     // connection.Open();
 
@@ -22,8 +21,11 @@ using(var connection = new SqlConnection(connectionString))
     //         Console.WriteLine($"{reader.GetGuid(0)} - {reader.GetString(1)}");
     //     }
     // };
-    ListCategories(connection);
+
     CreateCategory(connection);
+    UpdateCategory(connection);
+    DeleteCategory(connection);
+    ListCategories(connection);
 }
 
 static void ListCategories(SqlConnection connection)
@@ -69,4 +71,25 @@ static void CreateCategory(SqlConnection connection)
     });
 
     Console.WriteLine($"{rows} linha(s) inseridas");
+}
+
+static void UpdateCategory(SqlConnection connection)
+{
+    var updateSql = "UPDATE [Category] SET [Title]=@title WHERE [Id]=@id";
+    var rows = connection.Execute(updateSql, new {
+        id="10ac5463-9d0e-4c5c-a444-ddf340ca7ab4",
+        title="Google Cloud"
+    });
+
+    Console.WriteLine($"{rows} registro(s) atualizado(s)");
+}
+
+static void DeleteCategory(SqlConnection connection)
+{
+    var deleteSql = "DELETE FROM [Category] WHERE [Id]=@id";
+    var rows = connection.Execute(deleteSql, new {
+        id="10ac5463-9d0e-4c5c-a444-ddf340ca7ab4"
+    });
+
+    Console.WriteLine($"{rows} registro(s) afetados");
 }
