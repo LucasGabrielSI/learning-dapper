@@ -25,6 +25,7 @@ using(var connection = new SqlConnection(connectionString))
     CreateCategory(connection);
     UpdateCategory(connection);
     DeleteCategory(connection);
+    CreateManyCategories(connection);
     ListCategories(connection);
 }
 
@@ -92,4 +93,62 @@ static void DeleteCategory(SqlConnection connection)
     });
 
     Console.WriteLine($"{rows} registro(s) afetados");
+}
+
+static void CreateManyCategories(SqlConnection connection)
+{
+    var category = new Category
+    {
+        Id = Guid.NewGuid(),
+        Title = "Meta Projects",
+        Url = "meta-projects",
+        Summary = "Meta",
+        Order = 8,
+        Description = "Meta Projects",
+        Featured = true
+    };
+
+    var category2 = new Category
+    {
+        Id = Guid.NewGuid(),
+        Title = "Categoria 2",
+        Url = "categoria-dois",
+        Summary = "categoria",
+        Order = 8,
+        Description = "Categoria 2",
+        Featured = false
+    };
+
+    var insertSql = @"INSERT INTO [Category] VALUES (
+        @Id, 
+        @Title, 
+        @Url, 
+        @Summary,
+        @Order, 
+        @description, 
+        @featured
+    )";
+
+    var rows = connection.Execute(insertSql, new[] {
+        new {
+            category.Id, 
+            category.Title, 
+            category.Url, 
+            category.Summary, 
+            category.Order, 
+            category.Description, 
+            category.Featured
+        },
+        new {
+            category2.Id, 
+            category2.Title, 
+            category2.Url, 
+            category2.Summary, 
+            category2.Order, 
+            category2.Description, 
+            category2.Featured
+        }
+    });
+
+    Console.WriteLine($"{rows} linha(s) inseridas");
 }
