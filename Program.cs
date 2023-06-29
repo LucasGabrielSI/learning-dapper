@@ -13,6 +13,7 @@ using(var connection = new SqlConnection(connectionString))
     CreateManyCategories(connection);
     ListCategories(connection);
     ExecuteProcedure(connection);
+    ExecuteReadProcedure(connection);
 }
 
 static void ListCategories(SqlConnection connection)
@@ -141,15 +142,33 @@ static void CreateManyCategories(SqlConnection connection)
 
 static void ExecuteProcedure(SqlConnection connection)
 {
-    var Procedure = "[spDeleteStudent]"; 
+    var procedure = "[spDeleteStudent]"; 
 
     var pars = new { StudentId = "aee0caa7-53f3-4566-93a5-66c7be5032d7" };
     
     var affectedRows = connection.Execute(
-        Procedure, 
+        procedure, 
         pars, 
         commandType: CommandType.StoredProcedure
     );
 
     Console.WriteLine($"{affectedRows} registro(s) afetado(s)");
+}
+
+static void ExecuteReadProcedure(SqlConnection connection)
+{
+    var procedure = "[spGetCoursesByCategory]"; 
+
+    var pars = new { CategoryId = "af3407aa-11ae-4621-a2ef-2028b85507c4" };
+    
+    var courses = connection.Query(
+        procedure, 
+        pars, 
+        commandType: CommandType.StoredProcedure
+    );
+
+    foreach (var item in courses) 
+    {
+        Console.WriteLine($"{item.Id} - {item.Title}");
+    }
 }
