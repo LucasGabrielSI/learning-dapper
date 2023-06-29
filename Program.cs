@@ -14,6 +14,7 @@ using(var connection = new SqlConnection(connectionString))
     ListCategories(connection);
     ExecuteProcedure(connection);
     ExecuteReadProcedure(connection);
+    ExecuteScalar(connection);
 }
 
 static void ListCategories(SqlConnection connection)
@@ -171,4 +172,42 @@ static void ExecuteReadProcedure(SqlConnection connection)
     {
         Console.WriteLine($"{item.Id} - {item.Title}");
     }
+}
+
+static void ExecuteScalar(SqlConnection connection)
+{
+    var category = new Category
+    {
+        Title = "Azure",
+        Url = "azure.com",
+        Summary = "Azure",
+        Order = 8,
+        Description = "Serviços Azure",
+        Featured = true
+    };
+
+    var insertSql = @"
+        INSERT INTO 
+            [Category] 
+        OUTPUT Inserted.[Id]
+        VALUES (
+            NEWID(), 
+            @Title, 
+            @Url, 
+            @Summary,
+            @Order, 
+            @description, 
+            @featured
+    )";
+
+    var id = connection.ExecuteScalar<Guid>(insertSql, new {
+        category.Title, 
+        category.Url, 
+        category.Summary, 
+        category.Order, 
+        category.Description, 
+        category.Featured
+    });
+
+    Console.WriteLine($"Id da categoria inserida: {id}");
 }
