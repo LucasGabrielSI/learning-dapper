@@ -7,14 +7,15 @@ const string connectionString = "Server=localhost,1433;Database=balta;User ID=sa
 
 using(var connection = new SqlConnection(connectionString))
 {
-    CreateCategory(connection);
-    UpdateCategory(connection);
-    DeleteCategory(connection);
-    CreateManyCategories(connection);
-    ListCategories(connection);
-    ExecuteProcedure(connection);
-    ExecuteReadProcedure(connection);
-    ExecuteScalar(connection);
+    // CreateCategory(connection);
+    // UpdateCategory(connection);
+    // DeleteCategory(connection);
+    // CreateManyCategories(connection);
+    // ListCategories(connection);
+    // ExecuteProcedure(connection);
+    // ExecuteReadProcedure(connection);
+    // ExecuteScalar(connection);
+    ReadView(connection);
 }
 
 static void ListCategories(SqlConnection connection)
@@ -210,4 +211,15 @@ static void ExecuteScalar(SqlConnection connection)
     });
 
     Console.WriteLine($"Id da categoria inserida: {id}");
+}
+
+static void ReadView(SqlConnection connection)
+{
+    var sql = "SELECT * FROM [vwCourses]";
+    var courses = connection.Query(sql);
+
+    foreach (var item in courses)
+    {
+        Console.WriteLine($"{item.Id} - {item.Title}");
+    }
 }
