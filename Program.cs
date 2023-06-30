@@ -7,14 +7,14 @@ const string connectionString = "Server=localhost,1433;Database=balta;User ID=sa
 
 using(var connection = new SqlConnection(connectionString))
 {
-    // CreateCategory(connection);
-    // UpdateCategory(connection);
-    // DeleteCategory(connection);
-    // CreateManyCategories(connection);
-    // ListCategories(connection);
-    // ExecuteProcedure(connection);
-    // ExecuteReadProcedure(connection);
-    // ExecuteScalar(connection);
+    CreateCategory(connection);
+    UpdateCategory(connection);
+    DeleteCategory(connection);
+    CreateManyCategories(connection);
+    ListCategories(connection);
+    ExecuteProcedure(connection);
+    ExecuteReadProcedure(connection);
+    ExecuteScalar(connection);
     ReadView(connection);
 }
 
